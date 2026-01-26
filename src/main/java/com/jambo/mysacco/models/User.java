@@ -1,5 +1,6 @@
 package com.jambo.mysacco.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -9,16 +10,19 @@ import jakarta.persistence.Table;
 @Table(name = "users")
 public class User {
     @Id
-    private int userId;
+    private Long userId;
     String userName;
+    @Column(unique = true)
     String userPhone;
     String userStatus;
     String dob;
     String gender;
-    String saccoId;
+    Long saccoId;
     String userPin;
+    String userRole;
+    boolean active;
 
-    public User(int userId, String userName, String userPhone, String userStatus, String dob, String gender, String saccoId, String userPin) {
+    public User(Long userId, String userName, String userPhone, String userStatus, String dob, String gender, Long saccoId, String userPin, String userRole, boolean active) {
         this.userId = userId;
         this.userName = userName;
         this.userPhone = userPhone;
@@ -27,17 +31,19 @@ public class User {
         this.gender = gender;
         this.saccoId = saccoId;
         this.userPin = userPin;
+        this.userRole = userRole;
+        this.active = active;
     }
 
     public User() {
 
     }
 
-    public int getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -81,11 +87,11 @@ public class User {
         this.gender = gender;
     }
 
-    public String getSaccoId() {
+    public Long getSaccoId() {
         return saccoId;
     }
 
-    public void setSaccoId(String saccoId) {
+    public void setSaccoId(Long saccoId) {
         this.saccoId = saccoId;
     }
 
@@ -96,5 +102,23 @@ public class User {
     public void setUserPin(String userPin) {
         this.userPin = userPin;
     }
+
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+    }
+
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
 
 }

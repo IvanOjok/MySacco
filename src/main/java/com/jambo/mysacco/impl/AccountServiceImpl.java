@@ -29,7 +29,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<Account> getAllSaccoAccounts() {
-        return List.of();
+        return accountRepository.findAllById();
     }
 
     @Override

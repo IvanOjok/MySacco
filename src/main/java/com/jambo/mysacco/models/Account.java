@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 public class Account {
     @Id
     private int id;
-    String userId;
+    int userId;
     String balance;
     String saccoId;
 
@@ -17,11 +17,10 @@ public class Account {
 
     }
 
-    public Account(String userId, String balance, String saccoId, String role) {
+    public Account(int userId, String balance, String saccoId) {
         this.userId = userId;
         this.balance = balance;
         this.saccoId = saccoId;
-        this.role = role;
     }
 
     public int getId() {
@@ -32,11 +31,11 @@ public class Account {
         this.id = id;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -55,14 +54,4 @@ public class Account {
     public void setSaccoId(String saccoId) {
         this.saccoId = saccoId;
     }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    String role;
 }

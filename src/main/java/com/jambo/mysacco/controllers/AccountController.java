@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/account/")
@@ -30,7 +31,7 @@ public class AccountController {
         return ResponseEntity.ok(account.getBalance());
     }
 
-    @GetMapping()
+    @PostMapping("balance/{saccoId}")
     public ResponseEntity<String> getSaccoBalance(@RequestParam(name = "saccoId") int saccoId) {
         List<Account> accounts = accountService.getAllSaccoAccounts();
         if (accounts == null) {
@@ -38,7 +39,9 @@ public class AccountController {
         }
         int total = 0;
         for (Account account : accounts) {
-            total += Integer.parseInt(account.getBalance());
+            //if (Objects.equals(account.getSaccoId(), Integer.toString(saccoId))) {
+                total += Integer.parseInt(account.getBalance());
+            //}
         }
         return ResponseEntity.ok(Integer.toString(total));
     }
