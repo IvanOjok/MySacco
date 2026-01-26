@@ -5,10 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface AuthRepository extends JpaRepository<User, Integer> {
+public interface AuthRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByPhoneNumber(String phoneNumber);
+    Optional<User> findByUserPhone(String phoneNumber);
 
-    boolean existsByPhoneNumber(String phoneNumber);
+    boolean existsByUserPhone(String phoneNumber);
 
 }

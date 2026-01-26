@@ -2,23 +2,29 @@ package com.jambo.mysacco.models;
 
 
 public class LoginRequest {
-    private String phoneNumber;
-    private String pin;
+    private String userPhone;
+    private String userPin;
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public LoginRequest(String userPhone, String userPin) {
+        this.userPhone = userPhone;
+        this.userPin = userPin;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public String getUserPhone() {
+        return userPhone;
     }
 
-    public String getPin() {
-        return pin;
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 
-    public void setPin(String pin) {
-        this.pin = pin;
+    public String getUserPin() {
+        return userPin;
     }
+
+    public void setUserPin(String userPin) {
+        this.userPin = userPin;
+    }
+
 }
 

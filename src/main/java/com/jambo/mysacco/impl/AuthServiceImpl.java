@@ -7,9 +7,11 @@ import com.jambo.mysacco.models.User;
 import com.jambo.mysacco.repository.SaccoRepository;
 import com.jambo.mysacco.repository.AuthRepository;
 import com.jambo.mysacco.service.AuthService;
-import com.jambo.mysacco.service.JWTService;
+import com.jambo.mysacco.utils.JWTService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AuthServiceImpl implements AuthService {
 
     private final AuthRepository authRepository;
@@ -27,12 +29,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User createUser(User request) {
-        if (authRepository.existsByPhoneNumber(request.getUserPhone())) {
-            throw new RuntimeException("Phone number already registered");
+        if (authRepository.existsByUserPhone(request.getUserPhone())) {
+            throw new IllegalArgumentException("Phone number already registered");
         }
 
         Sacco sacco = saccoRepository.findById(request.getSaccoId())
-                .orElseThrow(() -> new RuntimeException("Sacco not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Sacco not found"));
 
         String hashedPin = passwordEncoder.encode(request.getUserPin());
 
@@ -53,11 +55,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponse login(LoginRequest request) {
         User user = authRepository
-                .findByPhoneNumber(request.getPhoneNumber())
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+                .findByUserPhone(request.getUserPhone())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
 
-        if (!passwordEncoder.matches(request.getPin(), user.getUserPin())) {
-            throw new RuntimeException("Invalid credentials");
+        if (!passwordEncoder.matches(request.getUserPin(), user.getUserPin())) {
+            throw new IllegalArgumentException("Invalid credentials");
         }
 
         String token = jwtService.generateToken(user);
@@ -69,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public User getUserById(int userId) {
+    public User getUserById(Long userId) {
         return authRepository.findById(userId).get();
     }
 
@@ -93,7 +95,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String deleteUser(int userId) {
+    public String deleteUser(Long userId) {
         authRepository.deleteById(userId);
         return "User Successfully Deleted";
     }

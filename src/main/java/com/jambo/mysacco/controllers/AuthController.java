@@ -43,7 +43,7 @@ public class AuthController {
     }
 
     @DeleteMapping("{userId}")
-    public String deleteUser(@PathVariable int userId) {
+    public String deleteUser(@PathVariable Long userId) {
         return authService.deleteUser(userId);
     }
 
