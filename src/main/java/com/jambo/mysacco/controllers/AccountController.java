@@ -2,12 +2,12 @@ package com.jambo.mysacco.controllers;
 
 
 import com.jambo.mysacco.models.Account;
+import com.jambo.mysacco.models.Transaction;
 import com.jambo.mysacco.service.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/account/")
@@ -25,26 +25,38 @@ public class AccountController {
         return ResponseEntity.ok("Account Successfully Created");
     }
 
-    @PostMapping("{userId}")
-    public ResponseEntity<String> getBalance(@RequestParam(name = "userId") int userId) {
+    @GetMapping("balance")
+    public ResponseEntity<String> getBalance(@RequestParam Long userId) {
         Account account = accountService.getAccount(userId);
-        return ResponseEntity.ok(account.getBalance());
+        return ResponseEntity.ok(String.valueOf(account.getBalance()));
     }
 
-    @PostMapping("balance/{saccoId}")
+    @GetMapping("balance/sacco")
     public ResponseEntity<String> getSaccoBalance(@RequestParam(name = "saccoId") int saccoId) {
         List<Account> accounts = accountService.getAllSaccoAccounts();
         if (accounts == null) {
             return ResponseEntity.notFound().build();
         }
-        int total = 0;
+        float total = 0;
         for (Account account : accounts) {
-            //if (Objects.equals(account.getSaccoId(), Integer.toString(saccoId))) {
-                total += Integer.parseInt(account.getBalance());
-            //}
+            if (account.getSaccoId() == saccoId) {
+                total += account.getBalance();
+            }
         }
-        return ResponseEntity.ok(Integer.toString(total));
+        return ResponseEntity.ok(String.valueOf(total));
     }
+
+    @PostMapping("transact")
+    public Transaction transact(@RequestBody Transaction request) {
+        return accountService.makeTransaction(request);
+    }
+
+    @GetMapping("history")
+    public List<Transaction> getHistory(@RequestParam("userId") Long userId) {
+        return accountService.transactionHistory(userId);
+    }
+
+
 
 
 }

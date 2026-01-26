@@ -1,23 +1,30 @@
 package com.jambo.mysacco.models;
 
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+@Entity
+@Table(name="sacco")
 public class Sacco {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String village;
-    private LocalDate startDate;
+    private String startDate;
     private boolean active;
 
-    public Sacco(Long id, String name, String village, LocalDate startDate, boolean active) {
+    public Sacco(Long id, String name, String village, String startDate, boolean active) {
         this.id = id;
         this.name = name;
         this.village = village;
         this.startDate = startDate;
         this.active = active;
+    }
+
+    public Sacco() {
+
     }
 
     public Long getId() {
@@ -44,11 +51,11 @@ public class Sacco {
         this.village = village;
     }
 
-    public LocalDate getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
