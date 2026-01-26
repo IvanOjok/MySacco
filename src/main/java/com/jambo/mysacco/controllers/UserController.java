@@ -3,6 +3,7 @@ package com.jambo.mysacco.controllers;
 
 import com.jambo.mysacco.models.User;
 import com.jambo.mysacco.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +19,12 @@ public class UserController {
     }
 
     @GetMapping("{userId}")
-    public User getUser(@PathVariable int userId) {
-        return userService.getUser(userId);
+    public ResponseEntity<User> getUser(@PathVariable int userId) {
+        User user = userService.getUser(userId);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user);
     }
 
 //    @PostMapping("{login}")
