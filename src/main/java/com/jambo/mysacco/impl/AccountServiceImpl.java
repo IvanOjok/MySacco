@@ -1,8 +1,8 @@
 package com.jambo.mysacco.impl;
 
-import com.jambo.mysacco.models.Account;
-import com.jambo.mysacco.models.Transaction;
-import com.jambo.mysacco.models.User;
+import com.jambo.mysacco.models.entities.Account;
+import com.jambo.mysacco.models.entities.Transaction;
+import com.jambo.mysacco.models.entities.User;
 import com.jambo.mysacco.repository.AccountRepository;
 import com.jambo.mysacco.repository.TransactionRepository;
 import com.jambo.mysacco.service.AccountService;

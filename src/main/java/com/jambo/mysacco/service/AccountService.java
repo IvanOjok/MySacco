@@ -1,7 +1,7 @@
 package com.jambo.mysacco.service;
 
-import com.jambo.mysacco.models.Account;
-import com.jambo.mysacco.models.Transaction;
+import com.jambo.mysacco.models.entities.Account;
+import com.jambo.mysacco.models.entities.Transaction;
 
 import java.util.List;
 

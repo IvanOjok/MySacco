@@ -1,4 +1,6 @@
-package com.jambo.mysacco.models;
+package com.jambo.mysacco.models.util;
+
+import com.jambo.mysacco.models.entities.User;
 
 public class LoginResponse {
     private String token;

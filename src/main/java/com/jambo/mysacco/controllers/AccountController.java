@@ -1,8 +1,8 @@
 package com.jambo.mysacco.controllers;
 
 
-import com.jambo.mysacco.models.Account;
-import com.jambo.mysacco.models.Transaction;
+import com.jambo.mysacco.models.entities.Account;
+import com.jambo.mysacco.models.entities.Transaction;
 import com.jambo.mysacco.service.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

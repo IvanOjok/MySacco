@@ -1,9 +1,9 @@
 package com.jambo.mysacco.impl;
 
-import com.jambo.mysacco.models.LoginRequest;
-import com.jambo.mysacco.models.LoginResponse;
-import com.jambo.mysacco.models.Sacco;
-import com.jambo.mysacco.models.User;
+import com.jambo.mysacco.models.util.LoginRequest;
+import com.jambo.mysacco.models.util.LoginResponse;
+import com.jambo.mysacco.models.entities.Sacco;
+import com.jambo.mysacco.models.entities.User;
 import com.jambo.mysacco.repository.SaccoRepository;
 import com.jambo.mysacco.repository.AuthRepository;
 import com.jambo.mysacco.service.AuthService;

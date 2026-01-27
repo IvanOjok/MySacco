@@ -1,7 +1,7 @@
 package com.jambo.mysacco.utils;
 
 
-import com.jambo.mysacco.models.User;
+import com.jambo.mysacco.models.entities.User;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

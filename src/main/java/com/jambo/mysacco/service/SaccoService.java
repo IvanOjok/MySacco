@@ -1,6 +1,6 @@
 package com.jambo.mysacco.service;
 
-import com.jambo.mysacco.models.Sacco;
+import com.jambo.mysacco.models.entities.Sacco;
 import org.springframework.stereotype.Service;
 
 

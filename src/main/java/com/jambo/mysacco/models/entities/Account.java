@@ -1,8 +1,6 @@
-package com.jambo.mysacco.models;
+package com.jambo.mysacco.models.entities;
 
 import jakarta.persistence.*;
-
-import java.math.BigDecimal;
 
 @Entity
 @Table(name="account")

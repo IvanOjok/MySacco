@@ -1,6 +1,6 @@
 package com.jambo.mysacco.impl;
 
-import com.jambo.mysacco.models.Sacco;
+import com.jambo.mysacco.models.entities.Sacco;
 import com.jambo.mysacco.repository.SaccoRepository;
 import com.jambo.mysacco.service.SaccoService;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,6 @@
-package com.jambo.mysacco.models;
+package com.jambo.mysacco.models.entities;
 
 import jakarta.persistence.*;
-
-import java.time.LocalDate;
 
 @Entity
 @Table(name="sacco")

@@ -1,6 +1,6 @@
 package com.jambo.mysacco.repository;
 
-import com.jambo.mysacco.models.User;
+import com.jambo.mysacco.models.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
