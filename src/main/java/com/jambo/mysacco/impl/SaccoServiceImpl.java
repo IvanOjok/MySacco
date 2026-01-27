@@ -19,4 +19,9 @@ public class SaccoServiceImpl implements SaccoService {
         return saccoRepository.save(request);
     }
 
+    @Override
+    public Sacco getSaccoById(Long saccoId) {
+        return saccoRepository.findById(saccoId).orElseThrow(() -> new IllegalArgumentException("Sacco Doesn't Exist"));
+    }
+
 }

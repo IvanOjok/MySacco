@@ -1,5 +1,6 @@
 package com.jambo.mysacco.impl;
 
+import com.jambo.mysacco.models.dtos.UserDto;
 import com.jambo.mysacco.models.util.LoginRequest;
 import com.jambo.mysacco.models.util.LoginResponse;
 import com.jambo.mysacco.models.entities.Sacco;
@@ -62,11 +63,23 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Invalid credentials");
         }
 
+        Sacco sacco = saccoRepository.findById(user.getSaccoId()).orElseThrow(() -> new IllegalArgumentException("Sacco Doesn't Exist"));
+
         String token = jwtService.generateToken(user);
+        UserDto userResponse = new UserDto(user.getUserId(),
+                user.getUserName(),
+                user.getUserPhone(),
+                user.getUserStatus(),
+                user.getDob(),
+                user.getGender(),
+                user.getSaccoId(),
+                sacco.getName(),
+                user.getUserRole(),
+                user.isActive());
 
         return new LoginResponse(
                 token,
-                user
+                userResponse
         );
     }
 

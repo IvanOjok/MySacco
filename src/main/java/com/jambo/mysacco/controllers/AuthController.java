@@ -1,5 +1,6 @@
 package com.jambo.mysacco.controllers;
 
+import com.jambo.mysacco.models.dtos.UserDto;
 import com.jambo.mysacco.models.util.LoginRequest;
 import com.jambo.mysacco.models.util.LoginResponse;
 import com.jambo.mysacco.models.entities.Sacco;
@@ -27,8 +28,19 @@ public class AuthController {
     }
 
     @PostMapping("user")
-    public User addUser(@RequestBody User user) {
-        return authService.createUser(user);
+    public UserDto addUser(@RequestBody User user) {
+        User userAcc = authService.createUser(user);
+        Sacco sacco = saccoService.getSaccoById(user.getSaccoId());
+        return new UserDto(userAcc.getUserId(),
+                userAcc.getUserName(),
+                userAcc.getUserPhone(),
+                userAcc.getUserStatus(),
+                userAcc.getDob(),
+                userAcc.getGender(),
+                userAcc.getSaccoId(),
+                sacco.getName(),
+                userAcc.getUserRole(),
+                userAcc.isActive());
     }
 
     @PostMapping("login")
