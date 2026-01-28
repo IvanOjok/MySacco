@@ -6,13 +6,11 @@ import com.jambo.mysacco.models.entities.Transaction;
 import java.util.List;
 
 public interface AccountService {
-    public String createAccount(Account account);
+    public String createAccount(Long userId);
 
-    public Account getAccount(Long userId);
+    public List<Account> getAccount(Long userId);
 
     public List<Account> getAllSaccoAccounts();
-
-    public String updateAccount(Account account);
 
     public Transaction makeTransaction(Transaction request);
 

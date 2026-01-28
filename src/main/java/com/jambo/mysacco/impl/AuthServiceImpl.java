@@ -7,6 +7,7 @@ import com.jambo.mysacco.models.entities.Sacco;
 import com.jambo.mysacco.models.entities.User;
 import com.jambo.mysacco.repository.SaccoRepository;
 import com.jambo.mysacco.repository.AuthRepository;
+import com.jambo.mysacco.service.AccountService;
 import com.jambo.mysacco.service.AuthService;
 import com.jambo.mysacco.utils.JWTService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,13 +20,15 @@ public class AuthServiceImpl implements AuthService {
     private final SaccoRepository saccoRepository;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
+    private final AccountService accountService;
 
 
-    public AuthServiceImpl(AuthRepository authRepository, SaccoRepository saccoRepository, PasswordEncoder passwordEncoder, JWTService jwtService) {
+    public AuthServiceImpl(AuthRepository authRepository, SaccoRepository saccoRepository, PasswordEncoder passwordEncoder, JWTService jwtService, AccountService accountService) {
         this.authRepository = authRepository;
         this.saccoRepository = saccoRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.accountService = accountService;
     }
 
     @Override
@@ -50,7 +53,11 @@ public class AuthServiceImpl implements AuthService {
         user.setUserRole(request.getUserRole());
         user.setActive(true);
 
-        return authRepository.save(user);
+        User createdUser = authRepository.save(user);
+        //create the different accounts for every individual user
+        accountService.createAccount(createdUser.getUserId());
+
+        return createdUser;
     }
 
     @Override
@@ -92,7 +99,6 @@ public class AuthServiceImpl implements AuthService {
     public User updateUser(User request) {
 
         String hashedPin = passwordEncoder.encode(request.getUserPin());
-
         User user = new User();
         user.setUserName(request.getUserName());
         user.setUserPhone(request.getUserPhone());

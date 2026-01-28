@@ -8,7 +8,6 @@ import com.jambo.mysacco.repository.TransactionRepository;
 import com.jambo.mysacco.service.AccountService;
 import com.jambo.mysacco.service.AuthService;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -26,23 +25,30 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public String createAccount(Account account) {
-        accountRepository.save(account);
-        return "Account Successfully Created";
+    public String createAccount(Long userId) {
+        User user = authService.getUserById(userId);
+        String[] accountTypes = {"shares","saving", "loan"};
+        if (!accountRepository.existsByUserId(userId)) {
+            for (String accountType: accountTypes) {
+                Account account = new Account();
+                account.setUserId(userId);
+                account.setBalance(0);
+                account.setType(accountType);
+                account.setSaccoId(user.getSaccoId());
+                accountRepository.save(account);
+            }
+        }
+        //return accountRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("Account Not Created"));
+
+        return "Accounts Created Successfully";
     }
 
     @Override
-    public Account getAccount(Long userId) {
-        User user = authService.getUserById(userId);
+    public List<Account> getAccount(Long userId) {
         if (!accountRepository.existsByUserId(userId)) {
-            Account account = new Account();
-            account.setUserId(userId);
-            account.setBalance(0);
-            account.setSaccoId(user.getSaccoId());
-            accountRepository.save(account);
-            //throw new IllegalArgumentException("Account Not Created");
+            throw new IllegalArgumentException("Account with user id "+ userId + "doesn't exist");
         }
-        return accountRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("Account Not Created"));
+        return accountRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("Account doesn't exist"));
     }
 
     @Override

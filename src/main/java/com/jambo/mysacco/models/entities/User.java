@@ -1,7 +1,11 @@
+/***
+ * this class identifies every individual member in the given sacco (group)
+ * Add more identification information like national id, or unique member ids.
+ */
+
 package com.jambo.mysacco.models.entities;
 
 import jakarta.persistence.*;
-
 
 @Entity
 @Table(name = "users")

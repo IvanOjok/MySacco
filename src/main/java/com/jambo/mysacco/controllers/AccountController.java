@@ -3,10 +3,11 @@ package com.jambo.mysacco.controllers;
 
 import com.jambo.mysacco.models.entities.Account;
 import com.jambo.mysacco.models.entities.Transaction;
+import com.jambo.mysacco.models.util.AccountResponse;
 import com.jambo.mysacco.service.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -20,15 +21,21 @@ public class AccountController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> addAccount(@RequestBody Account account) {
-        accountService.createAccount(account);
-        return ResponseEntity.ok("Account Successfully Created");
+    public ResponseEntity<String> addAccount(@RequestBody Long userId) {
+        return ResponseEntity.ok(accountService.createAccount(userId));
     }
 
     @GetMapping("balance")
-    public ResponseEntity<String> getBalance(@RequestParam Long userId) {
-        Account account = accountService.getAccount(userId);
-        return ResponseEntity.ok(String.valueOf(account.getBalance()));
+    public ResponseEntity<AccountResponse> getBalance(@RequestBody Long userId) {
+        List<Account> account = accountService.getAccount(userId);
+        HashMap<String, Float> bal = new HashMap<>();
+        for (Account acc: account) {
+            bal.put(acc.getType(), acc.getBalance());
+        }
+
+        AccountResponse response = new AccountResponse(account.getFirst().getUserId(), account.getFirst().getSaccoId(), bal);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("balance/sacco")
