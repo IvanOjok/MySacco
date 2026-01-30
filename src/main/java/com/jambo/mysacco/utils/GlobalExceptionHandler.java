@@ -1,7 +1,7 @@
 package com.jambo.mysacco.utils;
 
 
-import com.jambo.mysacco.models.ErrorResponse;
+import com.jambo.mysacco.models.util.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

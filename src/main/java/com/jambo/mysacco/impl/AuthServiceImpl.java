@@ -1,11 +1,13 @@
 package com.jambo.mysacco.impl;
 
-import com.jambo.mysacco.models.LoginRequest;
-import com.jambo.mysacco.models.LoginResponse;
-import com.jambo.mysacco.models.Sacco;
-import com.jambo.mysacco.models.User;
+import com.jambo.mysacco.models.dtos.UserDto;
+import com.jambo.mysacco.models.util.LoginRequest;
+import com.jambo.mysacco.models.util.LoginResponse;
+import com.jambo.mysacco.models.entities.Sacco;
+import com.jambo.mysacco.models.entities.User;
 import com.jambo.mysacco.repository.SaccoRepository;
 import com.jambo.mysacco.repository.AuthRepository;
+import com.jambo.mysacco.service.AccountService;
 import com.jambo.mysacco.service.AuthService;
 import com.jambo.mysacco.utils.JWTService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,13 +20,15 @@ public class AuthServiceImpl implements AuthService {
     private final SaccoRepository saccoRepository;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
+    private final AccountService accountService;
 
 
-    public AuthServiceImpl(AuthRepository authRepository, SaccoRepository saccoRepository, PasswordEncoder passwordEncoder, JWTService jwtService) {
+    public AuthServiceImpl(AuthRepository authRepository, SaccoRepository saccoRepository, PasswordEncoder passwordEncoder, JWTService jwtService, AccountService accountService) {
         this.authRepository = authRepository;
         this.saccoRepository = saccoRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.accountService = accountService;
     }
 
     @Override
@@ -33,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Phone number already registered");
         }
 
-        Sacco sacco = saccoRepository.findById(request.getSaccoId())
+        Sacco sacco = saccoRepository.findSaccoById(request.getSaccoId())
                 .orElseThrow(() -> new IllegalArgumentException("Sacco not found"));
 
         String hashedPin = passwordEncoder.encode(request.getUserPin());
@@ -49,7 +53,11 @@ public class AuthServiceImpl implements AuthService {
         user.setUserRole(request.getUserRole());
         user.setActive(true);
 
-        return authRepository.save(user);
+        User createdUser = authRepository.save(user);
+        //create the different accounts for every individual user
+        accountService.createAccount(createdUser.getUserId());
+
+        return createdUser;
     }
 
     @Override
@@ -62,24 +70,30 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Invalid credentials");
         }
 
+        Sacco sacco = saccoRepository.findSaccoById(user.getSaccoId()).orElseThrow(() -> new IllegalArgumentException("Sacco Doesn't Exist"));
+
         String token = jwtService.generateToken(user);
+        UserDto userResponse = new UserDto(user.getUserId(),
+                user.getUserName(),
+                user.getUserPhone(),
+                user.getUserStatus(),
+                user.getDob(),
+                user.getGender(),
+                user.getSaccoId(),
+                sacco.getName(),
+                user.getUserRole(),
+                user.isActive());
 
         return new LoginResponse(
                 token,
-                user
+                userResponse
         );
-    }
-
-    @Override
-    public User getUserById(Long userId) {
-        return authRepository.findById(userId).get();
     }
 
     @Override
     public User updateUser(User request) {
 
         String hashedPin = passwordEncoder.encode(request.getUserPin());
-
         User user = new User();
         user.setUserName(request.getUserName());
         user.setUserPhone(request.getUserPhone());

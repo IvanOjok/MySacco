@@ -1,26 +1,20 @@
-package com.jambo.mysacco.models;
-
-import jakarta.persistence.*;
+package com.jambo.mysacco.models.dtos;
 
 
-@Entity
-@Table(name = "users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UserDto {
     private Long userId;
     String userName;
-    @Column(unique = true)
     String userPhone;
     String userStatus;
     String dob;
     String gender;
     Long saccoId;
-    String userPin;
+    String saccoName;
     String userRole;
     boolean active;
 
-    public User(Long userId, String userName, String userPhone, String userStatus, String dob, String gender, Long saccoId, String userPin, String userRole, boolean active) {
+
+    public UserDto(Long userId, String userName, String userPhone, String userStatus, String dob, String gender, Long saccoId, String saccoName, String userRole, boolean active) {
         this.userId = userId;
         this.userName = userName;
         this.userPhone = userPhone;
@@ -28,13 +22,17 @@ public class User {
         this.dob = dob;
         this.gender = gender;
         this.saccoId = saccoId;
-        this.userPin = userPin;
+        this.saccoName = saccoName;
         this.userRole = userRole;
         this.active = active;
     }
 
-    public User() {
+    public String getSaccoName() {
+        return saccoName;
+    }
 
+    public void setSaccoName(String saccoName) {
+        this.saccoName = saccoName;
     }
 
     public Long getUserId() {
@@ -93,14 +91,6 @@ public class User {
         this.saccoId = saccoId;
     }
 
-    public String getUserPin() {
-        return userPin;
-    }
-
-    public void setUserPin(String userPin) {
-        this.userPin = userPin;
-    }
-
     public String getUserRole() {
         return userRole;
     }
@@ -109,7 +99,6 @@ public class User {
         this.userRole = userRole;
     }
 
-
     public boolean isActive() {
         return active;
     }
@@ -117,6 +106,4 @@ public class User {
     public void setActive(boolean active) {
         this.active = active;
     }
-
-
 }

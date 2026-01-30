@@ -1,4 +1,4 @@
-package com.jambo.mysacco.models;
+package com.jambo.mysacco.models.util;
 
 
 public class LoginRequest {

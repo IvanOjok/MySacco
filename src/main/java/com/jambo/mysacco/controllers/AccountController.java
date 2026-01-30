@@ -1,12 +1,14 @@
 package com.jambo.mysacco.controllers;
 
 
-import com.jambo.mysacco.models.Account;
-import com.jambo.mysacco.models.Transaction;
+import com.jambo.mysacco.models.entities.Account;
+import com.jambo.mysacco.models.entities.Transaction;
+import com.jambo.mysacco.models.util.AccountResponse;
+import com.jambo.mysacco.models.util.SaccoAccountResponse;
 import com.jambo.mysacco.service.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -20,30 +22,23 @@ public class AccountController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> addAccount(@RequestBody Account account) {
-        accountService.createAccount(account);
-        return ResponseEntity.ok("Account Successfully Created");
+    public ResponseEntity<String> addAccount(@RequestBody Long userId) {
+        return ResponseEntity.ok(accountService.createAccount(userId));
     }
 
     @GetMapping("balance")
-    public ResponseEntity<String> getBalance(@RequestParam Long userId) {
-        Account account = accountService.getAccount(userId);
-        return ResponseEntity.ok(String.valueOf(account.getBalance()));
+    public ResponseEntity<AccountResponse> getBalance(@RequestBody Long userId) {
+        return ResponseEntity.ok(accountService.getAccountBalance(userId));
     }
 
     @GetMapping("balance/sacco")
-    public ResponseEntity<String> getSaccoBalance(@RequestParam(name = "saccoId") int saccoId) {
-        List<Account> accounts = accountService.getAllSaccoAccounts();
-        if (accounts == null) {
-            return ResponseEntity.notFound().build();
-        }
-        float total = 0;
-        for (Account account : accounts) {
-            if (account.getSaccoId() == saccoId) {
-                total += account.getBalance();
-            }
-        }
-        return ResponseEntity.ok(String.valueOf(total));
+    public ResponseEntity<SaccoAccountResponse> getSaccoBalance(@RequestParam(name = "saccoId") Long saccoId) {
+        return ResponseEntity.ok(accountService.getSaccoBalances(saccoId));
+    }
+
+    @GetMapping("sacco/members")
+    public ResponseEntity<List<Account>> getSaccoMembers(@RequestParam(name = "saccoId") Long saccoId) {
+        return ResponseEntity.ok(accountService.getAllSaccoAccounts(saccoId));
     }
 
     @PostMapping("transact")

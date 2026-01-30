@@ -1,6 +1,6 @@
 package com.jambo.mysacco.impl;
 
-import com.jambo.mysacco.models.Sacco;
+import com.jambo.mysacco.models.entities.Sacco;
 import com.jambo.mysacco.repository.SaccoRepository;
 import com.jambo.mysacco.service.SaccoService;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,11 @@ public class SaccoServiceImpl implements SaccoService {
     @Override
     public Sacco createSacco(Sacco request) {
         return saccoRepository.save(request);
+    }
+
+    @Override
+    public Sacco getSaccoById(Long saccoId) {
+        return saccoRepository.findById(saccoId).orElseThrow(() -> new IllegalArgumentException("Sacco Doesn't Exist"));
     }
 
 }

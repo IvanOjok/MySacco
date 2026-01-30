@@ -1,9 +1,10 @@
 package com.jambo.mysacco.controllers;
 
-import com.jambo.mysacco.models.LoginRequest;
-import com.jambo.mysacco.models.LoginResponse;
-import com.jambo.mysacco.models.Sacco;
-import com.jambo.mysacco.models.User;
+import com.jambo.mysacco.models.dtos.UserDto;
+import com.jambo.mysacco.models.util.LoginRequest;
+import com.jambo.mysacco.models.util.LoginResponse;
+import com.jambo.mysacco.models.entities.Sacco;
+import com.jambo.mysacco.models.entities.User;
 import com.jambo.mysacco.service.AuthService;
 import com.jambo.mysacco.service.SaccoService;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,19 @@ public class AuthController {
     }
 
     @PostMapping("user")
-    public User addUser(@RequestBody User user) {
-        return authService.createUser(user);
+    public UserDto addUser(@RequestBody User user) {
+        User userAcc = authService.createUser(user);
+        Sacco sacco = saccoService.getSaccoById(user.getSaccoId());
+        return new UserDto(userAcc.getUserId(),
+                userAcc.getUserName(),
+                userAcc.getUserPhone(),
+                userAcc.getUserStatus(),
+                userAcc.getDob(),
+                userAcc.getGender(),
+                userAcc.getSaccoId(),
+                sacco.getName(),
+                userAcc.getUserRole(),
+                userAcc.isActive());
     }
 
     @PostMapping("login")

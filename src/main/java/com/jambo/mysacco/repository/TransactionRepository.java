@@ -1,6 +1,6 @@
 package com.jambo.mysacco.repository;
 
-import com.jambo.mysacco.models.Transaction;
+import com.jambo.mysacco.models.entities.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
