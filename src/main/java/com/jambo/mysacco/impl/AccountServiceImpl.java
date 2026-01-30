@@ -1,15 +1,12 @@
 package com.jambo.mysacco.impl;
 
-import com.jambo.mysacco.models.entities.Account;
-import com.jambo.mysacco.models.entities.Transaction;
-import com.jambo.mysacco.models.entities.User;
+import com.jambo.mysacco.models.entities.*;
 import com.jambo.mysacco.repository.AccountRepository;
 import com.jambo.mysacco.repository.TransactionRepository;
 import com.jambo.mysacco.service.AccountService;
 import com.jambo.mysacco.service.AuthService;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -27,9 +24,8 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public String createAccount(Long userId) {
         User user = authService.getUserById(userId);
-        String[] accountTypes = {"shares","saving", "loan"};
         if (!accountRepository.existsByUserId(userId)) {
-            for (String accountType: accountTypes) {
+            for (AccountType accountType: AccountType.values()) {
                 Account account = new Account();
                 account.setUserId(userId);
                 account.setBalance(0);
@@ -56,32 +52,20 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.findAll();
     }
 
-    @Override
-    public String updateAccount(Account account) {
-        return "";
-    }
 
     @Override
     public Transaction makeTransaction(Transaction request) {
+
         //update account
         User user = authService.getUserById(request.getUserId());
-        if (!accountRepository.existsByUserId(request.getUserId())) {
-            if (Objects.equals(request.getType(), "deposit")) {
-                Account account = new Account();
-                account.setUserId(request.getUserId());
-                account.setBalance(request.getAmount());
-                account.setSaccoId(user.getSaccoId());
-                accountRepository.save(account);
-            } else {
-                throw new IllegalArgumentException("Cannot Perform Transaction Before Depositing");
-            }
-        } else {
-            if (Objects.equals(request.getType(), "deposit")) {
-                Account account = accountRepository.findByUserId(request.getUserId()).orElseThrow(() -> new IllegalArgumentException("Account Not Created"));
+            if (request.getType() == TransactionType.DEPOSIT) {
+                Account account = accountRepository.findByUserIdAndType(request.getUserId(), AccountType.SAVINGS).orElseThrow(() -> new IllegalArgumentException("Account Not Found"));
+
+                /* Make an API call to payment service and run a cron job to update balances **/
                 account.setBalance(account.getBalance() + (request.getAmount()));
                 accountRepository.save(account);
-            } else if (Objects.equals(request.getType(), "withdraw")) {
-                Account account = accountRepository.findByUserId(request.getUserId()).orElseThrow(() -> new IllegalArgumentException("Account Not Created"));
+            } else if (request.getType() == TransactionType.WITHDRAWAL) {
+                Account account = accountRepository.findByUserIdAndType(request.getUserId(), AccountType.SAVINGS).orElseThrow(() -> new IllegalArgumentException("Account Not Found"));
                 float amount = account.getBalance() - (request.getAmount());
                 if (amount > 0) {
                     account.setBalance(amount);
@@ -90,7 +74,6 @@ public class AccountServiceImpl implements AccountService {
                     throw new IllegalArgumentException("Cannot withdraw more than Savings");
                 }
             }
-        }
 
         return transactionRepository.save(request);
     }

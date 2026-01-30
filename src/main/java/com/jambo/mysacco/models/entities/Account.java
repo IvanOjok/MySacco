@@ -15,21 +15,20 @@ public class Account {
     private int id;
     Long userId;
     Long saccoId;
-    String type;
+    AccountType type;
     float balance;
 
     public Account() {
 
     }
 
-    public Account(int id, Long userId, Long saccoId, String type, float balance) {
+    public Account(int id, Long userId, Long saccoId, AccountType type, float balance) {
         this.id = id;
         this.userId = userId;
         this.saccoId = saccoId;
         this.type = type;
         this.balance = balance;
     }
-
 
     public Long getSaccoId() {
         return saccoId;
@@ -55,11 +54,11 @@ public class Account {
         this.userId = userId;
     }
 
-    public String getType() {
+    public AccountType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(AccountType type) {
         this.type = type;
     }
 
@@ -71,3 +70,4 @@ public class Account {
         this.balance = balance;
     }
 }
+

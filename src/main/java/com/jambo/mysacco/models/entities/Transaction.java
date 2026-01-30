@@ -2,6 +2,8 @@ package com.jambo.mysacco.models.entities;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
+
 
 @Entity
 @Table(name = "transactions")
@@ -11,13 +13,19 @@ public class Transaction {
     private Long id;
     private Long userId;
     private float amount;
-    private String type;
+    private TransactionType type;
+    private Long performedBy;     /// loan transactions
+    private Date createdAt;
+    private Date updatedAt;
 
-    public Transaction(Long id, Long userId, float amount, String type) {
+    public Transaction(Long id, Long userId, float amount, TransactionType type, Long performedBy, Date createdAt, Date updatedAt) {
         this.id = id;
         this.userId = userId;
         this.amount = amount;
         this.type = type;
+        this.performedBy = performedBy;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public Transaction() {
@@ -48,12 +56,35 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public String getType() {
+    public TransactionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TransactionType type) {
         this.type = type;
     }
 
+    public Long getPerformedBy() {
+        return performedBy;
+    }
+
+    public void setPerformedBy(Long performedBy) {
+        this.performedBy = performedBy;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

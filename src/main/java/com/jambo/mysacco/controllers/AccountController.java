@@ -30,7 +30,7 @@ public class AccountController {
         List<Account> account = accountService.getAccount(userId);
         HashMap<String, Float> bal = new HashMap<>();
         for (Account acc: account) {
-            bal.put(acc.getType(), acc.getBalance());
+            bal.put(acc.getType().name().toLowerCase(), acc.getBalance());
         }
 
         AccountResponse response = new AccountResponse(account.getFirst().getUserId(), account.getFirst().getSaccoId(), bal);
