@@ -1,11 +1,16 @@
 package com.jambo.mysacco.impl;
 
 import com.jambo.mysacco.models.entities.*;
+import com.jambo.mysacco.models.util.SaccoAccountResponse;
 import com.jambo.mysacco.repository.AccountRepository;
+import com.jambo.mysacco.repository.AuthRepository;
+import com.jambo.mysacco.repository.SaccoRepository;
 import com.jambo.mysacco.repository.TransactionRepository;
 import com.jambo.mysacco.service.AccountService;
-import com.jambo.mysacco.service.AuthService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -13,17 +18,19 @@ public class AccountServiceImpl implements AccountService {
 
     AccountRepository accountRepository;
     TransactionRepository transactionRepository;
-    AuthService authService;
+    AuthRepository authRepository;
+    SaccoRepository saccoRepository;
 
-    public AccountServiceImpl(AccountRepository accountRepository, TransactionRepository transactionRepository, AuthService authService) {
+    public AccountServiceImpl(AccountRepository accountRepository, TransactionRepository transactionRepository, AuthRepository authRepository, SaccoRepository saccoRepository) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
-        this.authService = authService;
+        this.authRepository = authRepository;
+        this.saccoRepository = saccoRepository;
     }
 
     @Override
     public String createAccount(Long userId) {
-        User user = authService.getUserById(userId);
+        User user = authRepository.findUserByUserId(userId);
         if (!accountRepository.existsByUserId(userId)) {
             for (AccountType accountType: AccountType.values()) {
                 Account account = new Account();
@@ -42,22 +49,36 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<Account> getAccount(Long userId) {
         if (!accountRepository.existsByUserId(userId)) {
-            throw new IllegalArgumentException("Account with user id "+ userId + "doesn't exist");
+            throw new IllegalArgumentException("Account with user "+ userId + "doesn't exist");
         }
         return accountRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("Account doesn't exist"));
     }
 
     @Override
-    public List<Account> getAllSaccoAccounts() {
-        return accountRepository.findAll();
+    public List<Account> getAllSaccoAccounts(Long saccoId) {
+        return accountRepository.findAccountsBySaccoId(saccoId).orElseThrow(() -> new IllegalArgumentException("No accounts attached to Sacco"));
+    }
+
+    @Override
+    public  SaccoAccountResponse getSaccoBalances(Long saccoId) {
+        Sacco sacco = saccoRepository.findSaccoById(saccoId).orElseThrow(() -> new IllegalArgumentException("Sacco Doesn't Exist"));
+
+        HashMap<String, Float> balances = new HashMap<>();
+        for (AccountType type: AccountType.values()) {
+            Float balance = accountRepository.getTotalSaccoSavings(type, saccoId);
+            balances.put(type.name().toLowerCase(), balance);
+        }
+
+        return new SaccoAccountResponse(saccoId, sacco.getName(), balances);
     }
 
 
     @Override
+    @Transactional
     public Transaction makeTransaction(Transaction request) {
 
         //update account
-        User user = authService.getUserById(request.getUserId());
+        User user = authRepository.findUserByUserId(request.getUserId());
             if (request.getType() == TransactionType.DEPOSIT) {
                 Account account = accountRepository.findByUserIdAndType(request.getUserId(), AccountType.SAVINGS).orElseThrow(() -> new IllegalArgumentException("Account Not Found"));
 

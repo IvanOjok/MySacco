@@ -4,6 +4,7 @@ package com.jambo.mysacco.controllers;
 import com.jambo.mysacco.models.entities.Account;
 import com.jambo.mysacco.models.entities.Transaction;
 import com.jambo.mysacco.models.util.AccountResponse;
+import com.jambo.mysacco.models.util.SaccoAccountResponse;
 import com.jambo.mysacco.service.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,18 +40,8 @@ public class AccountController {
     }
 
     @GetMapping("balance/sacco")
-    public ResponseEntity<String> getSaccoBalance(@RequestParam(name = "saccoId") int saccoId) {
-        List<Account> accounts = accountService.getAllSaccoAccounts();
-        if (accounts == null) {
-            return ResponseEntity.notFound().build();
-        }
-        float total = 0;
-        for (Account account : accounts) {
-            if (account.getSaccoId() == saccoId) {
-                total += account.getBalance();
-            }
-        }
-        return ResponseEntity.ok(String.valueOf(total));
+    public ResponseEntity<SaccoAccountResponse> getSaccoBalance(@RequestParam(name = "saccoId") Long saccoId) {
+        return ResponseEntity.ok(accountService.getSaccoBalances(saccoId));
     }
 
     @PostMapping("transact")
