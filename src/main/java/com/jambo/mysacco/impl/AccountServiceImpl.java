@@ -1,12 +1,14 @@
 package com.jambo.mysacco.impl;
 
 import com.jambo.mysacco.models.entities.*;
+import com.jambo.mysacco.models.util.AccountResponse;
 import com.jambo.mysacco.models.util.SaccoAccountResponse;
 import com.jambo.mysacco.repository.AccountRepository;
 import com.jambo.mysacco.repository.AuthRepository;
 import com.jambo.mysacco.repository.SaccoRepository;
 import com.jambo.mysacco.repository.TransactionRepository;
 import com.jambo.mysacco.service.AccountService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +54,17 @@ public class AccountServiceImpl implements AccountService {
             throw new IllegalArgumentException("Account with user "+ userId + "doesn't exist");
         }
         return accountRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("Account doesn't exist"));
+    }
+
+    @Override
+    public AccountResponse getAccountBalance(Long userId) {
+        List<Account> account = getAccount(userId);
+        HashMap<String, Float> bal = new HashMap<>();
+        for (Account acc: account) {
+            bal.put(acc.getType().name().toLowerCase(), acc.getBalance());
+        }
+
+        return new AccountResponse(account.getFirst().getUserId(), account.getFirst().getSaccoId(), bal);
     }
 
     @Override

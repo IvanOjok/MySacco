@@ -10,8 +10,6 @@ public interface AuthService {
 
     public LoginResponse login(LoginRequest request);
 
-    public User getUserById(Long userId);
-
     public User updateUser(User user);
 
     public String deleteUser(Long userId);

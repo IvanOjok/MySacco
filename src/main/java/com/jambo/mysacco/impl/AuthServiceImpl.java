@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Phone number already registered");
         }
 
-        Sacco sacco = saccoRepository.findById(request.getSaccoId())
+        Sacco sacco = saccoRepository.findSaccoById(request.getSaccoId())
                 .orElseThrow(() -> new IllegalArgumentException("Sacco not found"));
 
         String hashedPin = passwordEncoder.encode(request.getUserPin());
@@ -70,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Invalid credentials");
         }
 
-        Sacco sacco = saccoRepository.findById(user.getSaccoId()).orElseThrow(() -> new IllegalArgumentException("Sacco Doesn't Exist"));
+        Sacco sacco = saccoRepository.findSaccoById(user.getSaccoId()).orElseThrow(() -> new IllegalArgumentException("Sacco Doesn't Exist"));
 
         String token = jwtService.generateToken(user);
         UserDto userResponse = new UserDto(user.getUserId(),
@@ -88,11 +88,6 @@ public class AuthServiceImpl implements AuthService {
                 token,
                 userResponse
         );
-    }
-
-    @Override
-    public User getUserById(Long userId) {
-        return authRepository.findById(userId).get();
     }
 
     @Override
