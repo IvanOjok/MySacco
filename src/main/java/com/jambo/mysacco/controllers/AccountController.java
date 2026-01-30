@@ -28,20 +28,17 @@ public class AccountController {
 
     @GetMapping("balance")
     public ResponseEntity<AccountResponse> getBalance(@RequestBody Long userId) {
-        List<Account> account = accountService.getAccount(userId);
-        HashMap<String, Float> bal = new HashMap<>();
-        for (Account acc: account) {
-            bal.put(acc.getType().name().toLowerCase(), acc.getBalance());
-        }
-
-        AccountResponse response = new AccountResponse(account.getFirst().getUserId(), account.getFirst().getSaccoId(), bal);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(accountService.getAccountBalance(userId));
     }
 
     @GetMapping("balance/sacco")
     public ResponseEntity<SaccoAccountResponse> getSaccoBalance(@RequestParam(name = "saccoId") Long saccoId) {
         return ResponseEntity.ok(accountService.getSaccoBalances(saccoId));
+    }
+
+    @GetMapping("sacco/members")
+    public ResponseEntity<List<Account>> getSaccoMembers(@RequestParam(name = "saccoId") Long saccoId) {
+        return ResponseEntity.ok(accountService.getAllSaccoAccounts(saccoId));
     }
 
     @PostMapping("transact")
