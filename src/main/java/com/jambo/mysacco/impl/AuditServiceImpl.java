@@ -14,15 +14,7 @@ public class AuditServiceImpl implements AuditService {
 
     @Override
     public AuditLog createLog(AuditLog request) {
-        AuditLog log = new AuditLog();
-        log.setAction(request.action);
-        log.setEntity(request.entity);
-        log.setEntityId(request.entityId);
-        log.setDescription(request.description);
-        log.setPerformedBy(request.getPerformedBy());
-        log.setPerformedByRole(request.getPerformedByRole());
-        log.setIpAddress(request.getIpAddress());
-        return auditRepository.save(log);
+        return auditRepository.save(request);
     }
 
 }
