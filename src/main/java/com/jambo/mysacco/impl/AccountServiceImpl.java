@@ -9,11 +9,6 @@ import com.jambo.mysacco.repository.SaccoRepository;
 import com.jambo.mysacco.repository.TransactionRepository;
 import com.jambo.mysacco.service.AccountService;
 import com.jambo.mysacco.service.AuditService;
-import com.jambo.mysacco.utils.RequestContext;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -113,7 +108,7 @@ public class AccountServiceImpl implements AccountService {
     public Transaction makeTransaction(Transaction request) {
 
         //update account
-        User user = authRepository.findUserByUserId(request.getUserId());
+        //User user = authRepository.findUserByUserId(request.getUserId());
             if (request.getType() == TransactionType.DEPOSIT) {
                 Account account = accountRepository.findByUserIdAndType(request.getUserId(), AccountType.SAVINGS).orElseThrow(() -> new IllegalArgumentException("Account Not Found"));
 

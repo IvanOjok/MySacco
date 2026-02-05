@@ -1,7 +1,6 @@
 package com.jambo.mysacco.impl;
 
 import com.jambo.mysacco.models.dtos.UserDto;
-import com.jambo.mysacco.models.entities.AuditLog;
 import com.jambo.mysacco.models.util.LoginRequest;
 import com.jambo.mysacco.models.util.LoginResponse;
 import com.jambo.mysacco.models.entities.Sacco;
@@ -12,7 +11,6 @@ import com.jambo.mysacco.service.AccountService;
 import com.jambo.mysacco.service.AuditService;
 import com.jambo.mysacco.service.AuthService;
 import com.jambo.mysacco.utils.JWTService;
-import com.jambo.mysacco.utils.RequestContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

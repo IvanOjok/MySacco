@@ -7,7 +7,9 @@ import com.jambo.mysacco.utils.RequestContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AuditServiceImpl implements AuditService {
 
     private final AuditRepository auditRepository;
@@ -17,7 +19,7 @@ public class AuditServiceImpl implements AuditService {
     }
 
     @Override
-    public AuditLog createLog(String action, String entity, Long entityId, String description) {
+    public void createLog(String action, String entity, Long entityId, String description) {
         //audit
         Authentication auth =
                 SecurityContextHolder.getContext().getAuthentication();
@@ -44,7 +46,7 @@ public class AuditServiceImpl implements AuditService {
         log.setPerformedByRole(role);
         log.setIpAddress(RequestContext.getClientIp());
 
-        return auditRepository.save(log);
+        auditRepository.save(log);
     }
 
 }
