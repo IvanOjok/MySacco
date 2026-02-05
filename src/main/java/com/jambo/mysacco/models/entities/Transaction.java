@@ -14,15 +14,17 @@ public class Transaction {
     private Long userId;
     private float amount;
     private TransactionType type;
+    private TransactionStatus status = TransactionStatus.PENDING;
     private Long performedBy;     /// loan transactions
     private Date createdAt;
     private Date updatedAt;
 
-    public Transaction(Long id, Long userId, float amount, TransactionType type, Long performedBy, Date createdAt, Date updatedAt) {
+    public Transaction(Long id, Long userId, float amount, TransactionType type, TransactionStatus status, Long performedBy, Date createdAt, Date updatedAt) {
         this.id = id;
         this.userId = userId;
         this.amount = amount;
         this.type = type;
+        this.status = status;
         this.performedBy = performedBy;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -62,6 +64,14 @@ public class Transaction {
 
     public void setType(TransactionType type) {
         this.type = type;
+    }
+
+    public TransactionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TransactionStatus status) {
+        this.status = status;
     }
 
     public Long getPerformedBy() {

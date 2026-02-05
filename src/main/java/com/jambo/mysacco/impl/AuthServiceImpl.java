@@ -8,6 +8,7 @@ import com.jambo.mysacco.models.entities.User;
 import com.jambo.mysacco.repository.SaccoRepository;
 import com.jambo.mysacco.repository.AuthRepository;
 import com.jambo.mysacco.service.AccountService;
+import com.jambo.mysacco.service.AuditService;
 import com.jambo.mysacco.service.AuthService;
 import com.jambo.mysacco.utils.JWTService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,14 +22,16 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
     private final AccountService accountService;
+    private final AuditService auditService;
 
 
-    public AuthServiceImpl(AuthRepository authRepository, SaccoRepository saccoRepository, PasswordEncoder passwordEncoder, JWTService jwtService, AccountService accountService) {
+    public AuthServiceImpl(AuthRepository authRepository, SaccoRepository saccoRepository, PasswordEncoder passwordEncoder, JWTService jwtService, AccountService accountService, AuditService auditService) {
         this.authRepository = authRepository;
         this.saccoRepository = saccoRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.accountService = accountService;
+        this.auditService = auditService;
     }
 
     @Override
@@ -56,6 +59,8 @@ public class AuthServiceImpl implements AuthService {
         User createdUser = authRepository.save(user);
         //create the different accounts for every individual user
         accountService.createAccount(createdUser.getUserId());
+        //audit
+        auditService.createLog("User Account Creation", String.valueOf(createdUser), createdUser.getUserId(), "New Registration and Account Creation");
 
         return createdUser;
     }
@@ -84,6 +89,10 @@ public class AuthServiceImpl implements AuthService {
                 user.getUserRole(),
                 user.isActive());
 
+        //audit
+        auditService.createLog("User Login", String.valueOf(userResponse), user.getUserId(), "User logging into the app");
+
+
         return new LoginResponse(
                 token,
                 userResponse
@@ -105,12 +114,19 @@ public class AuthServiceImpl implements AuthService {
         user.setUserRole(request.getUserRole());
         user.setActive(request.isActive());
 
+        //audit
+        auditService.createLog("User Update", String.valueOf(user), user.getUserId(), "Updating user data");
+
         return authRepository.save(user);
     }
 
     @Override
     public String deleteUser(Long userId) {
+        User user = authRepository.findUserByUserId(userId);
         authRepository.deleteById(userId);
+        //audit
+        auditService.createLog("User Delete", String.valueOf(user), userId, "Deleting user data");
+
         return "User Successfully Deleted";
     }
 }
