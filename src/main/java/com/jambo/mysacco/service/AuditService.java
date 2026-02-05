@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface AuditService {
 
-    public AuditLog createLog(AuditLog request);
+    public AuditLog createLog(String action, String entity, Long entityId, String description);
 
 }

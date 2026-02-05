@@ -62,15 +62,7 @@ public class AuthServiceImpl implements AuthService {
         //create the different accounts for every individual user
         accountService.createAccount(createdUser.getUserId());
         //audit
-        AuditLog log = new AuditLog();
-        log.setAction("User Account Creation");
-        log.setEntity(String.valueOf(createdUser));
-        log.setEntityId(createdUser.getUserId());
-        log.setDescription("New Registration and Account Creation");
-        log.setPerformedBy(createdUser.getUserId());
-        log.setPerformedByRole(createdUser.getUserRole());
-        log.setIpAddress(RequestContext.getClientIp());
-        auditService.createLog(log);
+        auditService.createLog("User Account Creation", String.valueOf(createdUser), createdUser.getUserId(), "New Registration and Account Creation");
 
         return createdUser;
     }
@@ -100,15 +92,8 @@ public class AuthServiceImpl implements AuthService {
                 user.isActive());
 
         //audit
-        AuditLog log = new AuditLog();
-        log.setAction("Login");
-        log.setEntity(String.valueOf(userResponse));
-        log.setEntityId(user.getUserId());
-        log.setDescription("User logging into the app");
-        log.setPerformedBy(user.getUserId());
-        log.setPerformedByRole(user.getUserRole());
-        log.setIpAddress(RequestContext.getClientIp());
-        auditService.createLog(log);
+        auditService.createLog("User Login", String.valueOf(userResponse), user.getUserId(), "User logging into the app");
+
 
         return new LoginResponse(
                 token,
@@ -132,33 +117,17 @@ public class AuthServiceImpl implements AuthService {
         user.setActive(request.isActive());
 
         //audit
-        AuditLog log = new AuditLog();
-        log.setAction("Update");
-        log.setEntity(String.valueOf(user));
-        log.setEntityId(user.getUserId());
-        log.setDescription("Updating user data");
-        log.setPerformedBy(user.getUserId());
-        log.setPerformedByRole(user.getUserRole());
-        log.setIpAddress(RequestContext.getClientIp());
-        auditService.createLog(log);
+        auditService.createLog("User Update", String.valueOf(user), user.getUserId(), "Updating user data");
 
         return authRepository.save(user);
     }
 
     @Override
     public String deleteUser(Long userId) {
+        User user = authRepository.findUserByUserId(userId);
         authRepository.deleteById(userId);
-
         //audit
-        AuditLog log = new AuditLog();
-        log.setAction("Login");
-        log.setEntity(String.valueOf(userId));
-        log.setEntityId(userId);
-        log.setDescription("User account deletion");
-        log.setPerformedBy(userId);
-        log.setPerformedByRole("User");
-        log.setIpAddress(RequestContext.getClientIp());
-        auditService.createLog(log);
+        auditService.createLog("User Delete", String.valueOf(user), userId, "Deleting user data");
 
         return "User Successfully Deleted";
     }
